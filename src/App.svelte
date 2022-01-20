@@ -1,13 +1,13 @@
 <script lang="ts">
-	import Grid from "./components/Grid.svelte";
+  import Grid from "./components/Grid.svelte";
 </script>
 
 <main>
-	<Grid />
+  <Grid />
 </main>
 
 <style global lang="postcss">
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 </style>
