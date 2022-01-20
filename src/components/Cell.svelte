@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { playCell } from "../utils/music.svelte";
+
+  export let col: number = 0;
+
   let active = false;
   let focused = false;
 
@@ -9,9 +13,10 @@
     focused = false;
   };
 
-  const toggleActive = () => {
+  function clickHandler() {
     active = !active;
-  };
+    if (active) playCell(col);
+  }
 </script>
 
 <button
@@ -21,7 +26,7 @@
   on:mouseenter={addFocus}
   on:mouseleave={removeFocus}
   on:focus
-  on:click={toggleActive}
+  on:click={clickHandler}
 />
 
 <style>

@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex">
-  {#each { length: numCells } as _}
-    <Cell />
+  {#each { length: numCells } as _, idx}
+    <Cell col={idx} />
   {/each}
 </div>
