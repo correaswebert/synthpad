@@ -10,6 +10,7 @@
   export let numRows: number;
   export let numCols: number;
   export let bpm: number;
+  export let scale: string
 
   const dispatch = createEventDispatcher();
 
@@ -121,12 +122,13 @@
               transition ease-in-out
               focus:border-blue-600 focus:outline-none"
         aria-label="Select scale"
+        bind:value={scale}
       >
         <option value="classic" selected>classic</option>
         <option value="pentatonic">pentatonic</option>
         <option value="chromatic">chromatic</option>
         <option value="major">major</option>
-        <option value="harmonic minor">harmonic minor</option>
+        <option value="harmonic_minor">harmonic minor</option>
       </select>
       <label for="scale" class="text-white lowercase"> Scale </label>
     </div>

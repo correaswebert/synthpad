@@ -78,6 +78,12 @@
   };
 
   let selectedScale = scales["classic"];
+  const possibleScales = Object.keys(scales)
+
+  export const selectScale = (scale: string) => {
+    if (possibleScales.includes(scale))
+      selectedScale = scales[scale]
+  }
 
   export const initAudio = async () => {
     synth = new Tone.PolySynth(Tone.Synth).toDestination()

@@ -2,13 +2,14 @@
   import { onMount } from "svelte";
   import Row from "./Row.svelte";
   import Controls from "./Controls.svelte";
-  import { playRow } from "../utils/music.svelte";
+  import { playRow, selectScale } from "../utils/music.svelte";
 
   let numRows: number = 8;
   let numCols: number = 10;
   let isGridPlaying: boolean = false;
   let currRow: number = -1;
   let bpm: number = 100;
+  let scale: string = "classic"
   let playIntervalId: NodeJS.Timer;
 
   let grid: boolean[][] = [];
@@ -64,6 +65,8 @@
 
   $: updateGrid(numRows, numCols);
 
+  $: selectScale(scale)
+
   onMount(initGrid);
 </script>
 
@@ -72,6 +75,7 @@
     bind:numRows
     bind:numCols
     bind:bpm
+    bind:scale
     on:clear={clearGrid}
     on:play={playGrid}
     on:pause={pauseGrid}
