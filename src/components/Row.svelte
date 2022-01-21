@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
   import Cell from "./Cell.svelte";
 
-  const numCells = 7;
+  export let row: boolean[]
 </script>
 
 <div class="flex">
-  {#each { length: numCells } as _, idx}
-    <Cell col={idx} />
+  {#each row as active, idx}
+    <Cell bind:active cellIdx={idx} />
   {/each}
 </div>

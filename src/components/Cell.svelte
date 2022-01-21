@@ -1,9 +1,9 @@
 <script lang="ts">
   import { playCell } from "../utils/music.svelte";
 
-  export let col: number = 0;
+  export let cellIdx: number;
+  export let active: boolean;
 
-  let active = false;
   let focused = false;
 
   const addFocus = () => {
@@ -15,7 +15,7 @@
 
   function clickHandler() {
     active = !active;
-    if (active) playCell(col);
+    if (active) playCell(cellIdx);
   }
 </script>
 
