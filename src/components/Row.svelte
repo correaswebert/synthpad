@@ -7,7 +7,7 @@
   export let idx: number;
 </script>
 
-<div class={`flex ${isRowAcive ? "scale-95 -translate-x-6" : ""}`}>
+<div class="flex">
   <button
     class="w-24 h-24 m-1 text-white bg-zinc-900 rounded-lg select-none transition ease-in delay-[50ms]"
     on:click|capture={() => playRow(row)}
@@ -15,7 +15,9 @@
     {idx + 1}
   </button>
 
-  {#each row as active, idx}
-    <Cell bind:active cellIdx={idx} />
-  {/each}
+  <div class={`${isRowAcive ? "scale-95 -translate-x-1" : ""}`}>
+    {#each row as active, idx}
+      <Cell bind:active cellIdx={idx} />
+    {/each}
+  </div>
 </div>
