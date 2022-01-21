@@ -2,7 +2,7 @@
   import Grid from "./components/Grid.svelte";
 </script>
 
-<main>
+<main class="h-full bg-zinc-900">
   <Grid />
 </main>
 
