@@ -16,7 +16,15 @@
 
   function toggleIsPlaying() {
     isPlaying = !isPlaying
-    dispatch('play')
+    if (isPlaying)
+      dispatch('play')
+    else
+      dispatch('pause')
+  }
+
+  function stopPlaying() {
+    isPlaying = false;
+    dispatch('stop')
   }
 </script>
 
@@ -39,6 +47,10 @@
 
 <button class="text-white" on:click={toggleIsPlaying}>
   {isPlaying ? 'Pause' : 'Play'}
+</button>
+
+<button class="text-white" on:click={stopPlaying}>
+  Stop
 </button>
 
 <button class="text-white" on:click={() => dispatch('clear')}>

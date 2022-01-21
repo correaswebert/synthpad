@@ -2,27 +2,26 @@
   import { onMount } from "svelte";
   import Row from "./Row.svelte";
   import Controls from "./Controls.svelte";
-import { playRow } from "../utils/music.svelte";
+  import { playRow } from "../utils/music.svelte";
 
   let numRows: number = 8;
   let numCols: number = 7;
   let isPlaying: boolean = false;
-  let currRow: number = 0;
+  let currRow: number = -1;
   let bpm = 100;
-  let playIntervalId: NodeJS.Timer
+  let playIntervalId: NodeJS.Timer;
 
   let grid: boolean[][] = [];
 
   function clearGrid() {
-    if (!grid.length) return
+    if (!grid.length) return;
     for (let row = 0; row < numRows; row++)
-      for (let col = 0; col < numCols; col++) 
-        grid[row][col] = false;
-    grid = grid
+      for (let col = 0; col < numCols; col++) grid[row][col] = false;
+    grid = grid;
   }
 
   function emptyGrid() {
-    grid = []
+    grid = [];
   }
 
   function initGrid(): void {
@@ -44,12 +43,20 @@ import { playRow } from "../utils/music.svelte";
   }
 
   function playGrid() {
-    clearInterval(playIntervalId)
+    clearInterval(playIntervalId);
     playIntervalId = setInterval(() => {
+      currRow = (currRow + 1) % numRows;
       playRow(grid[currRow]);
-      currRow++;
-      currRow %= numRows;
-		},  60 * 1000 / bpm);
+    }, (60 * 1000) / bpm);
+  }
+
+  function pauseGrid() {
+    clearInterval(playIntervalId);
+  }
+
+  function stopGrid() {
+    clearInterval(playIntervalId)
+    currRow = -1
   }
 
   $: updateGrid(numRows, numCols);
@@ -58,9 +65,17 @@ import { playRow } from "../utils/music.svelte";
 </script>
 
 <div class="flex flex-col bg-neutral-900">
-  <Controls bind:numRows bind:numCols bind:bpm on:clear={clearGrid} on:play={playGrid} />
+  <Controls
+    bind:numRows
+    bind:numCols
+    bind:bpm
+    on:clear={clearGrid}
+    on:play={playGrid}
+    on:pause={pauseGrid}
+    on:stop={stopGrid}
+  />
 
-  {#each grid as row}
-    <Row bind:row />
+  {#each grid as row, idx}
+    <Row isRowAcive={currRow === idx} idx={idx} bind:row />
   {/each}
 </div>
