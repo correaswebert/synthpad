@@ -21,7 +21,7 @@
 </script>
 
 <button
-  class="w-24 h-24 m-1 bg-zinc-900 rounded-lg select-none transition ease-in delay-[50ms]"
+  class="w-24 h-24 m-1 bg-zinc-900 border border-white rounded-lg select-none transition ease-in delay-[50ms]"
   class:active
   class:focused
   on:mouseenter={addFocus}
