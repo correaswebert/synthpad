@@ -3,10 +3,11 @@
 
   export let isPlaying = false
 
-  export let numRows = 4
-  export let numCols = 4
+  export let numRows
+  export let numCols
+  export let bpm
 
-  const dispath = createEventDispatcher()
+  const dispatch = createEventDispatcher()
 
   const minNumRows = 4
   const maxNumRows = 16
@@ -15,6 +16,7 @@
 
   function toggleIsPlaying() {
     isPlaying = !isPlaying
+    dispatch('play')
   }
 </script>
 
@@ -28,12 +30,17 @@
     Number of cols
     <input min={minNumCols} max={maxNumCols} type="number" bind:value={numCols} />
   </label>
+
+  <label for="bpm">
+    BPM
+    <input min={0} max={1000} type="number" bind:value={bpm} />
+  </label>
 </div>
 
 <button class="text-white" on:click={toggleIsPlaying}>
   {isPlaying ? 'Pause' : 'Play'}
 </button>
 
-<button class="text-white" on:click={() => dispath('clear')}>
+<button class="text-white" on:click={() => dispatch('clear')}>
   Clear grid
 </button>
