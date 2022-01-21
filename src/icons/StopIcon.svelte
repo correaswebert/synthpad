@@ -3,8 +3,8 @@
   class="fill-cyan-500 hover:fill-cyan-700"
   x="0"
   y="0"
-  width="24"
-  height="24"
+  width="25"
+  height="25"
   viewBox="0 0 448 512"
 >
   <!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
