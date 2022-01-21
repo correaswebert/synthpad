@@ -25,7 +25,6 @@
   class:focused
   on:mouseenter={addFocus}
   on:mouseleave={removeFocus}
-  on:focus
   on:click={clickHandler}
 />
 
