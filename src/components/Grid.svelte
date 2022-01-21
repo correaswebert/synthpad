@@ -6,7 +6,7 @@
 
   let numRows: number = 8;
   let numCols: number = 7;
-  let isPlaying: boolean = false;
+  let isGridPlaying: boolean = false;
   let currRow: number = -1;
   let bpm = 100;
   let playIntervalId: NodeJS.Timer;
@@ -43,6 +43,7 @@
   }
 
   function playGrid() {
+    isGridPlaying = true
     clearInterval(playIntervalId);
     playIntervalId = setInterval(() => {
       currRow = (currRow + 1) % numRows;
@@ -51,10 +52,12 @@
   }
 
   function pauseGrid() {
+    isGridPlaying = false
     clearInterval(playIntervalId);
   }
-
+  
   function stopGrid() {
+    isGridPlaying = false
     clearInterval(playIntervalId)
     currRow = -1
   }
@@ -76,6 +79,6 @@
   />
 
   {#each grid as row, idx}
-    <Row isRowAcive={currRow === idx} idx={idx} bind:row />
+    <Row isGridPlaying={isGridPlaying} isRowAcive={currRow === idx} idx={idx} bind:row />
   {/each}
 </div>

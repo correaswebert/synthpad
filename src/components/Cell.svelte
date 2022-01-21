@@ -3,6 +3,7 @@
 
   export let cellIdx: number;
   export let active: boolean;
+  export let isGridPlaying: boolean
 
   let focused = false;
 
@@ -15,7 +16,7 @@
 
   function clickHandler() {
     active = !active;
-    if (active) playCell(cellIdx);
+    if (active && !isGridPlaying) playCell(cellIdx);
   }
 </script>
 
