@@ -1,6 +1,7 @@
 <script lang="ts">
   import { playRow } from "../utils/music.svelte";
   import Cell from "./Cell.svelte";
+import PlayIcon from "../icons/PlayIcon.svelte";
 
   export let row: boolean[];
   export let isRowAcive: boolean;
@@ -10,10 +11,10 @@
 
 <div class="flex">
   <button
-    class="w-24 h-24 m-1 text-white bg-zinc-900 rounded-lg select-none transition ease-in delay-[50ms]"
+    class="w-24 h-24 m-1 flex justify-center items-center border border-zinc-900 rounded-lg hover:border-white"
     on:click|capture={() => !isGridPlaying &&playRow(row)}
   >
-    {idx + 1}
+    <PlayIcon />
   </button>
 
   <div class={`${isRowAcive ? "scale-95 -translate-x-1" : ""}`}>

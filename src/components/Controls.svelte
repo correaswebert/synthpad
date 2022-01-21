@@ -1,5 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import BinIcon from "../icons/BinIcon.svelte";
+  import PauseIcon from "../icons/PauseIcon.svelte";
+  import PlayIcon from "../icons/PlayIcon.svelte";
+  import StopIcon from "../icons/StopIcon.svelte";
 
   export let isPlaying = false;
 
@@ -35,7 +39,7 @@
 
 <div class="flex">
   <label for="numRows">
-    Number of rows
+    Rows
     <input
       min={minNumRows}
       max={maxNumRows}
@@ -45,7 +49,7 @@
   </label>
 
   <label for="numCols">
-    Number of cols
+    Cols
     <input
       min={minNumCols}
       max={maxNumCols}
@@ -53,10 +57,19 @@
       bind:value={numCols}
     />
   </label>
+</div>
 
+<div class="flex justify-around">
   <label for="bpm">
     BPM
     <input
+      class="form-control
+        px-3
+        py-1.5
+        text-gray-700 bg-white bg-clip-padding
+        rounded
+        transition ease-in-out
+        focus:outline-none"
       min={0}
       max={1000}
       type="number"
@@ -64,14 +77,38 @@
       on:change={debounceReplay}
     />
   </label>
+
+  <div>
+    <button class="border-0 text-white active:bg-transparent" on:click={() => dispatch("clear")}>
+      <BinIcon />
+    </button>
+
+    <button class="border-0 text-white active:bg-transparent" on:click={toggleIsPlaying}>
+      {#if isPlaying === true}
+        <PauseIcon />
+      {:else}
+        <PlayIcon />
+      {/if}
+    </button>
+
+    <button class="border-0 text-white active:bg-transparent" on:click={stopPlaying}>
+      <StopIcon />
+    </button>
+  </div>
+
+  <select
+    class="appearance-none
+      px-3 py-1.5
+      text-gray-700 bg-white
+      rounded
+      transition ease-in-out
+      focus:border-blue-600 focus:outline-none"
+    aria-label="Select scale"
+  >
+    <option value="classic" selected>classic</option>
+    <option value="pentatonic">pentatonic</option>
+    <option value="chromatic">chromatic</option>
+    <option value="major">major</option>
+    <option value="harmonic minor">harmonic minor</option>
+  </select>
 </div>
-
-<button class="text-white" on:click={toggleIsPlaying}>
-  {isPlaying ? "Pause" : "Play"}
-</button>
-
-<button class="text-white" on:click={stopPlaying}> Stop </button>
-
-<button class="text-white" on:click={() => dispatch("clear")}>
-  Clear grid
-</button>
