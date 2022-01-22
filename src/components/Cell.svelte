@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { playCell } from "../utils/music.svelte";
 
   export let cellIdx: number;
   export let active: boolean;
   export let isGridPlaying: boolean
+
+  const dispatch = createEventDispatcher();
 
   let focused = false;
 
@@ -17,6 +20,7 @@
   function clickHandler() {
     active = !active;
     if (active && !isGridPlaying) playCell(cellIdx);
+    dispatch('update')
   }
 </script>
 

@@ -3,16 +3,18 @@
   import Row from "./Row.svelte";
   import Controls from "./Controls.svelte";
   import { playRow, selectScale } from "../utils/music.svelte";
+  import { decodeUrl, encodeUrl } from "../utils/hash.svelte";
 
-  let numRows: number = 8;
-  let numCols: number = 10;
+  let numRows: number = 12;
+  let numCols: number = 7;
   let isGridPlaying: boolean = false;
   let currRow: number = -1;
   let bpm: number = 100;
-  let scale: string = "classic"
+  let scale: string = "classic";
   let playIntervalId: NodeJS.Timer;
-
+  let saved: boolean = false;
   let grid: boolean[][] = [];
+  let dataUrl: string = ""
 
   function clearGrid() {
     if (!grid.length) return;
@@ -26,6 +28,18 @@
   }
 
   function initGrid(): void {
+    if (window.location.search !== "") {
+      const urlSearch = window.location.search.split("=")[1];
+      window.location.search = "";
+
+      const synthData = decodeUrl(urlSearch);
+      grid = synthData.grid;
+      scale = synthData.scale;
+      bpm = synthData.bpm;
+
+      return;
+    }
+
     emptyGrid();
 
     for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
@@ -63,29 +77,46 @@
     currRow = -1;
   }
 
+  function saveGrid() {
+    const urlData = encodeUrl({ grid, scale, bpm });
+    console.log(urlData);
+  }
+
+  function unsetSaved() {
+    // dataUrl = encodeUrl({ grid, scale, bpm });
+    saved = false
+  }
+
   $: updateGrid(numRows, numCols);
 
-  $: selectScale(scale)
+  $: selectScale(scale);
+
+  $: dataUrl = encodeUrl({ grid, scale, bpm });
 
   onMount(initGrid);
 </script>
 
-<div class="w-full h-full flex flex-col items-center bg-neutral-900 overflow-y-hidden">
+<div
+  class="w-full h-full flex flex-col items-center bg-neutral-900 overflow-y-hidden"
+>
   <Controls
     bind:numRows
     bind:numCols
     bind:bpm
     bind:scale
+    bind:saved
+    bind:dataUrl
     on:clear={clearGrid}
     on:play={playGrid}
     on:pause={pauseGrid}
     on:stop={stopGrid}
     on:replay={playGrid}
+    on:saved={saveGrid}
   />
 
   <div class="grow my-2 -translate-x-8 overflow-y-auto no-scrollbar">
     {#each grid as row, idx}
-      <Row {isGridPlaying} isRowAcive={currRow === idx} {idx} bind:row />
+      <Row on:update={unsetSaved} {isGridPlaying} isRowAcive={currRow === idx} {idx} bind:row />
     {/each}
   </div>
 </div>
@@ -93,12 +124,12 @@
 <style>
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 </style>

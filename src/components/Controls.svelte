@@ -4,13 +4,16 @@
   import PauseIcon from "../icons/PauseIcon.svelte";
   import PlayIcon from "../icons/PlayIcon.svelte";
   import StopIcon from "../icons/StopIcon.svelte";
+  import SaveIcon from "../icons/SaveIcon.svelte";
 
   export let isPlaying = false;
+  export let saved;
 
   export let numRows: number;
   export let numCols: number;
   export let bpm: number;
-  export let scale: string
+  export let scale: string;
+  export let dataUrl: string;
 
   const dispatch = createEventDispatcher();
 
@@ -20,6 +23,7 @@
   const maxNumCols = 12;
 
   let debounceTimerId: NodeJS.Timeout;
+  let copied = false;
 
   function toggleIsPlaying() {
     isPlaying = !isPlaying;
@@ -32,105 +36,148 @@
     dispatch("stop");
   }
 
+  function saveData() {
+    if (!saved) dispatch("saved");
+    saved = true;
+  }
+
+  async function copyUrl() {
+    if (!copied) {
+      const origin = window.location.origin
+      const url = `${origin}/?dataUrl=${dataUrl}`
+      await navigator.clipboard.writeText(url);
+    }
+    copied = true;
+  }
+
   const debounceReplay = () => {
     clearTimeout(debounceTimerId);
     debounceTimerId = setTimeout(() => dispatch("replay"), 100);
   };
 </script>
 
-<div class="sticky top-0 z-10 bg-zinc-900 w-full flex flex-col justify-center items-center border-b border-white">
-  <div class="flex my-4">
-    <div class="flex flex-col mx-4">
-      <input
-        class="form-control
+<div
+  class="sticky top-0 z-10 bg-zinc-900 w-full flex flex-col justify-center items-center border-b border-white"
+>
+  <div class="w-2/4 max-w-xl">
+    <div class="flex mt-4 w-full">
+      <div class="flex flex-col mr-4">
+        <input
+          class="form-control
                 h-10
                 px-3 py-1.5
                 text-gray-700 bg-white bg-clip-padding
                 rounded
                 transition ease-in-out
                 focus:outline-none"
-        min={minNumCols}
-        max={maxNumCols}
-        type="number"
-        bind:value={numCols}
-      />
-      <label for="cols" class="text-white lowercase"> Cols </label>
-    </div>
+          min={minNumCols}
+          max={maxNumCols}
+          type="number"
+          bind:value={numCols}
+        />
+        <label for="cols" class="text-white lowercase"> Cols </label>
+      </div>
 
-    <div class="flex flex-col mx-4">
-      <input
-        class="form-control
+      <div class="flex flex-col mx-4">
+        <input
+          class="form-control
                 h-10
                 px-3 py-1.5
                 text-gray-700 bg-white bg-clip-padding
                 rounded
                 transition ease-in-out
                 focus:outline-none"
-        min={minNumRows}
-        max={maxNumRows}
-        type="number"
-        bind:value={numRows}
-      />
-      <label for="rows" class="text-white lowercase"> Rows </label>
-    </div>
-  </div>
+          min={minNumRows}
+          max={maxNumRows}
+          type="number"
+          bind:value={numRows}
+        />
+        <label for="rows" class="text-white lowercase"> Rows </label>
+      </div>
 
-  <div class="flex justify-around items-center my-4 w-2/4">
-    <div class="flex flex-col mx-4">
-      <input
-        class="form-control
+      <div class="flex grow flex-col ml-4 overflow-hidden">
+        <button
+          class="text-ellipsis whitespace-nowrap overflow-hidden
+                font-mono text-left
+                h-10
+                px-3 py-1.5
+                text-gray-700 bg-white bg-clip-padding
+                rounded
+                transition ease-in-out
+                focus:outline-none"
+          on:click={copyUrl}>{dataUrl}</button
+        >
+        <label for="data" class="text-white lowercase">
+          Share Link
+          {#if copied}
+            •
+            <span class="text-green-500">copied!</span>
+          {/if}
+        </label>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center w-full my-4">
+      <div class="flex flex-col mr-4">
+        <input
+          class="form-control
               h-10
               px-3 py-1.5
               text-gray-700 bg-white bg-clip-padding
               rounded
               transition ease-in-out
               focus:outline-none"
-        min={0}
-        max={1000}
-        type="number"
-        bind:value={bpm}
-        on:change={debounceReplay}
-      />
-      <label for="bpm" class="text-white lowercase"> BPM </label>
-    </div>
+          min={0}
+          max={1000}
+          type="number"
+          bind:value={bpm}
+          on:change={debounceReplay}
+        />
+        <label for="bpm" class="text-white lowercase"> BPM </label>
+      </div>
 
-    <div class="flex mx-4 pb-6">
-      <button class="p-4" on:click={() => dispatch("clear")}>
-        <BinIcon />
-      </button>
+      <div class="flex mx-4 pb-6">
+        <button class="p-4" on:click={() => dispatch("clear")}>
+          <BinIcon />
+        </button>
 
-      <button class="p-4" on:click={toggleIsPlaying}>
-        {#if isPlaying === true}
-          <PauseIcon />
-        {:else}
-          <PlayIcon />
-        {/if}
-      </button>
+        <button class="p-4" on:click={toggleIsPlaying}>
+          {#if isPlaying === true}
+            <PauseIcon />
+          {:else}
+            <PlayIcon />
+          {/if}
+        </button>
 
-      <button class="p-4" on:click={stopPlaying}>
-        <StopIcon />
-      </button>
-    </div>
+        <button class="p-4" on:click={stopPlaying}>
+          <StopIcon />
+        </button>
 
-    <div class="flex flex-col mx-4">
-      <select
-        class="appearance-none
+        <button class="p-4" on:click={saveData}>
+          <SaveIcon bind:saved />
+        </button>
+      </div>
+
+      <div class="flex flex-col ml-4">
+        <select
+          class="appearance-none
               h-10
               px-3 py-1
               text-gray-700 bg-white
               rounded
               transition ease-in-out
               focus:border-blue-600 focus:outline-none"
-        aria-label="Select scale"
-        bind:value={scale}
-      >
-        <option value="classic" selected>classic</option>
-        <option value="pentatonic">pentatonic</option>
-        <option value="chromatic">chromatic</option>
-        <option value="major">major</option>
-        <option value="harmonic_minor">harmonic minor</option>
-      </select>
-      <label for="scale" class="text-white lowercase"> Scale </label>
+          aria-label="Select scale"
+          bind:value={scale}
+        >
+          <option value="classic" selected>classic</option>
+          <option value="pentatonic">pentatonic</option>
+          <option value="chromatic">chromatic</option>
+          <option value="major">major</option>
+          <option value="harmonic_minor">harmonic minor</option>
+        </select>
+        <label for="scale" class="text-white lowercase"> Scale </label>
+      </div>
     </div>
   </div>
 </div>
