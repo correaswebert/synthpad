@@ -40,20 +40,26 @@
       return;
     }
 
-    emptyGrid();
-
-    for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
-      const newRow = [...Array(numCols)].fill(false);
-      grid = [...grid, newRow];
-    }
+    updateGrid(numRows, numCols)
   }
 
-  function updateGrid(numRows: number, numCols: number): void {
+  function updateGrid(newNumRows: number, newNumCols: number): void {
+    const oldGrid = [...grid]
     emptyGrid();
-
-    for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
-      const newRow = [...Array(numCols)].fill(false);
+    
+    for (let rowIdx = 0; rowIdx < newNumRows; rowIdx++) {
+      const newRow = [...Array(newNumCols)].fill(false);
       grid = [...grid, newRow];
+    }
+
+    if (oldGrid.length === 0) return
+    const minRows = Math.min(oldGrid.length, newNumRows)
+    const minCols = Math.min(oldGrid[0].length, newNumCols)
+
+    for (let rowIdx = 0; rowIdx < minRows; rowIdx++) {
+      for (let cellIdx = 0; cellIdx < minCols; cellIdx++) {
+        grid[rowIdx][cellIdx] = oldGrid[rowIdx][cellIdx]
+      }
     }
   }
 
