@@ -11,7 +11,7 @@ import PlayIcon from "../icons/PlayIcon.svelte";
 
 <div class="flex">
   <button
-    class="w-24 h-24 m-1 flex justify-center items-center border border-zinc-900 rounded-lg hover:border-white"
+    class="w-24 h-24 m-1 flex justify-center items-center border border-zinc-900 rounded-lg transition active:bg-white"
     on:click|capture={() => !isGridPlaying &&playRow(row)}
   >
     <PlayIcon />
