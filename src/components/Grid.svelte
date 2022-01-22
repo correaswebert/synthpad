@@ -14,7 +14,7 @@
   let playIntervalId: NodeJS.Timer;
   let saved: boolean = false;
   let grid: boolean[][] = [];
-  let dataUrl: string = ""
+  let dataUrl: string = "";
 
   function clearGrid() {
     if (!grid.length) return;
@@ -28,37 +28,35 @@
   }
 
   function initGrid(): void {
-    if (window.location.search !== "") {
-      const urlSearch = window.location.search.split("=")[1];
-      window.location.search = "";
+    if (window.location.search === "") return;
 
-      const synthData = decodeUrl(urlSearch);
-      grid = synthData.grid;
-      scale = synthData.scale;
-      bpm = synthData.bpm;
+    const dataUrl = window.location.search.split("=")[1];
+    window.history.replaceState(null, "", window.location.origin);
 
-      return;
-    }
-
-    updateGrid(numRows, numCols)
+    const synthData = decodeUrl(dataUrl);
+    grid = synthData.grid;
+    scale = synthData.scale;
+    bpm = synthData.bpm;
+    numRows = grid.length;
+    numCols = grid[0].length;
   }
 
   function updateGrid(newNumRows: number, newNumCols: number): void {
-    const oldGrid = [...grid]
+    const oldGrid = [...grid];
     emptyGrid();
-    
+
     for (let rowIdx = 0; rowIdx < newNumRows; rowIdx++) {
       const newRow = [...Array(newNumCols)].fill(false);
       grid = [...grid, newRow];
     }
 
-    if (oldGrid.length === 0) return
-    const minRows = Math.min(oldGrid.length, newNumRows)
-    const minCols = Math.min(oldGrid[0].length, newNumCols)
+    if (oldGrid.length === 0) return;
+    const minRows = Math.min(oldGrid.length, newNumRows);
+    const minCols = Math.min(oldGrid[0].length, newNumCols);
 
     for (let rowIdx = 0; rowIdx < minRows; rowIdx++) {
       for (let cellIdx = 0; cellIdx < minCols; cellIdx++) {
-        grid[rowIdx][cellIdx] = oldGrid[rowIdx][cellIdx]
+        grid[rowIdx][cellIdx] = oldGrid[rowIdx][cellIdx];
       }
     }
   }
@@ -90,7 +88,7 @@
 
   function unsetSaved() {
     // dataUrl = encodeUrl({ grid, scale, bpm });
-    saved = false
+    saved = false;
   }
 
   $: updateGrid(numRows, numCols);
@@ -122,7 +120,13 @@
 
   <div class="grow my-2 -translate-x-8 overflow-y-auto no-scrollbar">
     {#each grid as row, idx}
-      <Row on:update={unsetSaved} {isGridPlaying} isRowAcive={currRow === idx} {idx} bind:row />
+      <Row
+        on:update={unsetSaved}
+        {isGridPlaying}
+        isRowAcive={currRow === idx}
+        {idx}
+        bind:row
+      />
     {/each}
   </div>
 </div>
