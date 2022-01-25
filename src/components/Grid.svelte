@@ -4,15 +4,17 @@
   import Controls from "./Controls.svelte";
   import { playRow, selectScale } from "../utils/music.svelte";
   import { decodeUrl, encodeUrl } from "../utils/hash.svelte";
+  import { fetchMusigen } from "../utils/musigen.svelte";
 
-  let numRows: number = 12;
-  let numCols: number = 7;
+  let numRows: number = 4;
+  let numCols: number = 8;
   let isGridPlaying: boolean = false;
   let currRow: number = -1;
   let bpm: number = 100;
   let scale: string = "classic";
   let playIntervalId: NodeJS.Timer;
   let saved: boolean = false;
+  let copied:boolean = false
   let grid: boolean[][] = [];
   let dataUrl: string = "";
 
@@ -87,8 +89,13 @@
   }
 
   function unsetSaved() {
-    // dataUrl = encodeUrl({ grid, scale, bpm });
     saved = false;
+    copied = false;
+  }
+
+  async function aiAssist() {
+    const musigenData = await fetchMusigen({grid, scale, bpm})
+    grid = musigenData.grid
   }
 
   $: updateGrid(numRows, numCols);
@@ -109,6 +116,7 @@
     bind:bpm
     bind:scale
     bind:saved
+    bind:copied
     bind:dataUrl
     on:clear={clearGrid}
     on:play={playGrid}
@@ -116,6 +124,7 @@
     on:stop={stopGrid}
     on:replay={playGrid}
     on:saved={saveGrid}
+    on:musigen={aiAssist}
   />
 
   <div class="grow my-2 -translate-x-8 overflow-y-auto no-scrollbar">
