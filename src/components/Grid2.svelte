@@ -1,11 +1,22 @@
 <script lang="ts">
   import Row2 from "./Row2.svelte";
   import { dimens, grid, synthState } from "../utils/store";
-  import { playRow } from "../utils/music2";
+  import { decodeUrl } from "../utils/hash2";
+  import { onMount } from "svelte";
 
-  let currRow: number = -1;
-  let playIntervalId: NodeJS.Timer;
-  let bpm = 150;
+  function initGrid(): void {
+    if (window.location.search === "") return;
+
+    const dataUrl = window.location.search.split("=")[1];
+    window.history.replaceState(null, "", window.location.origin);
+
+    const synthData = decodeUrl(dataUrl);
+    $grid = synthData.grid;
+    $synthState.scale = synthData.scale;
+    $synthState.bpm = synthData.bpm;
+    $dimens.numRows = synthData.grid.length;
+    $dimens.numCols = synthData.grid[0].length;
+  }
 
   export function clearGrid() {
     if (!$grid.length) return;
@@ -43,6 +54,8 @@
   }
 
   $: updateGrid($dimens.numRows, $dimens.numCols);
+
+  onMount(initGrid);
 </script>
 
 <div class="flex flex-col">
