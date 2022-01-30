@@ -70,6 +70,12 @@
     dispatch("musigen");
   }
 
+  function updateSavedStates(_grid: boolean[][]) {
+    copied = false;
+    saved = false;
+  }
+
+  $: updateSavedStates($grid)
 
   $: $dataUrl = encodeUrl({
     grid: $grid,
