@@ -5,13 +5,21 @@
   let isGridPlaying: boolean = false;
   let currRow: number = -1;
 
-  function emptyGrid() {
-    $grid = [];
+  export function clearGrid() {
+    if (!$grid.length) return;
+
+    for (let row = 0; row < $dimens.numRows; row++) {
+      for (let col = 0; col < $dimens.numCols; col++) {
+        $grid[row][col] = false;
+      }
+    }
+
+    $grid = $grid;
   }
 
   function updateGrid(newNumRows: number, newNumCols: number): void {
     const oldGrid = [...$grid];
-    emptyGrid();
+    $grid = [];
 
     // generate the updated grid
     for (let rowIdx = 0; rowIdx < newNumRows; rowIdx++) {

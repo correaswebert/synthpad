@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Grid from "./components/Grid.svelte";
+  import Synthpad from "./components/Synthpad.svelte";
 </script>
 
 <main class="h-full bg-zinc-900">
-  <Grid />
+  <Synthpad />
 </main>
 
 <style global lang="postcss">
