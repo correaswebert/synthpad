@@ -9,16 +9,13 @@
   import UndoIcon from "../icons/UndoIcon.svelte";
   import RedoIcon from "../icons/RedoIcon.svelte";
   import RobotIcon from "../icons/RobotIcon.svelte";
+  import { dimens, synthState, dataUrl, grid } from "../utils/store";
+  import { playGrid, pauseGrid, stopGrid, clearGrid } from "../utils/music";
+  import { encodeUrl } from "../utils/hash";
 
-  export let isPlaying = false;
-  export let saved: boolean;
-  export let copied = false;
-
-  export let numRows: number;
-  export let numCols: number;
-  export let bpm: number;
-  export let scale: string;
-  export let dataUrl: string;
+  let isPlaying = $synthState.playing;
+  let saved: boolean;
+  let copied = false;
 
   const dispatch = createEventDispatcher();
 
@@ -32,13 +29,16 @@
 
   function toggleIsPlaying() {
     isPlaying = !isPlaying;
-    if (isPlaying) dispatch("play");
-    else dispatch("pause");
+    if (isPlaying) {
+      playGrid();
+    } else {
+      pauseGrid();
+    }
   }
 
   function stopPlaying() {
     isPlaying = false;
-    dispatch("stop");
+    stopGrid();
   }
 
   function saveData() {
@@ -50,7 +50,7 @@
     if (!copied) {
       const origin = window.location.origin;
       const pathname = window.location.pathname;
-      const url = `${origin}${pathname}?dataUrl=${dataUrl}`;
+      const url = `${origin}${pathname}?dataUrl=${$dataUrl}`;
       await navigator.clipboard.writeText(url);
       dispatch("copied");
     }
@@ -67,8 +67,21 @@
   };
 
   function musigenHelper() {
-    dispatch('musigen')
+    dispatch("musigen");
   }
+
+  function updateSavedStates(_grid: boolean[][]) {
+    copied = false;
+    saved = false;
+  }
+
+  $: updateSavedStates($grid)
+
+  $: $dataUrl = encodeUrl({
+    grid: $grid,
+    scale: $synthState.scale,
+    bpm: $synthState.bpm,
+  });
 </script>
 
 <div
@@ -88,7 +101,7 @@
           min={minNumCols}
           max={maxNumCols}
           type="number"
-          bind:value={numCols}
+          bind:value={$dimens.numCols}
         />
         <label for="cols" class="text-white lowercase"> Cols </label>
       </div>
@@ -105,28 +118,9 @@
           min={minNumRows}
           max={maxNumRows}
           type="number"
-          bind:value={numRows}
+          bind:value={$dimens.numRows}
         />
         <label for="rows" class="text-white lowercase"> Rows </label>
-      </div>
-
-      <div class="flex flex-col ml-4 overflow-hidden">
-        <button
-          class="text-ellipsis whitespace-nowrap overflow-hidden
-                font-mono text-left
-                h-10
-                px-3 py-1.5
-                text-gray-700 bg-white bg-clip-padding
-                hover:bg-gray-300
-                rounded
-                transition ease-in-out
-                focus:outline-none"
-          on:click={() => {}}
-        >
-          MusiGen
-        </button>
-
-        <label for="data" class="text-white lowercase"> Assistant </label>
       </div>
 
       <div class="flex grow flex-col ml-4 overflow-hidden">
@@ -172,7 +166,7 @@
           min={0}
           max={1000}
           type="number"
-          bind:value={bpm}
+          bind:value={$synthState.bpm}
           on:change={debounceReplay}
         />
         <label for="bpm" class="text-white lowercase"> BPM </label>
@@ -180,7 +174,7 @@
 
       <div class="flex mx-4 pb-6">
         <div class="flex">
-          <button class="p-4" on:click={() => dispatch("clear")}>
+          <button class="p-4" on:click={clearGrid}>
             <BinIcon />
           </button>
 
@@ -232,7 +226,7 @@
               transition ease-in-out
               focus:border-blue-600 focus:outline-none"
           aria-label="Select scale"
-          bind:value={scale}
+          bind:value={$synthState.scale}
         >
           <option value="classic" selected>classic</option>
           <option value="pentatonic">pentatonic</option>

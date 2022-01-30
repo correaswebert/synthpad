@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Controls2 from "./Controls2.svelte";
+  import Controls from "./Controls.svelte";
   import PlayRow from "./PlayRow.svelte";
-  import Grid2 from "./Grid2.svelte";
+  import Grid from "./Grid.svelte";
   import LockRow from "./LockRow.svelte";
 </script>
 
@@ -12,11 +12,11 @@
     bg-neutral-900
     overflow-y-hidden"
 >
-  <Controls2 />
+  <Controls />
 
   <div class="grow flex my-2 -translate-x-8 overflow-y-auto no-scrollbar">
     <PlayRow />
-    <Grid2 />
+    <Grid />
     <LockRow />
   </div>
 </div>

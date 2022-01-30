@@ -6,6 +6,7 @@ export const dimens = writable({
 });
 
 export const grid = writable<boolean[][]>([[]]);
+export const dataUrl = writable("")
 
 export const synthState = writable({
   playing: false,

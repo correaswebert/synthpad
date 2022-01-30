@@ -1,13 +1,13 @@
 <script lang="ts">
-  import PlayIcon from "$icons/PlayIcon.svelte";
+  import LockIcon from "../icons/LockIcon.svelte";
   import { dimens } from "../utils/store";
-  import { playRow } from "../utils/music";
 </script>
 
 <div class="flex flex-col">
   {#each Array($dimens.numRows) as _, idx}
-    <button on:click|capture={() => playRow(idx)}>
-      <PlayIcon />
+    <!-- TODO: handle the click -->
+    <button on:click|capture>
+      <LockIcon />
     </button>
   {/each}
 </div>
