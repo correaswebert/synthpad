@@ -9,16 +9,12 @@
   import UndoIcon from "../icons/UndoIcon.svelte";
   import RedoIcon from "../icons/RedoIcon.svelte";
   import RobotIcon from "../icons/RobotIcon.svelte";
-  import { dimens } from "../utils/store";
-  import { playGrid, pauseGrid, stopGrid } from "../utils/music2";
+  import { dimens, synthState } from "../utils/store";
+  import { playGrid, pauseGrid, stopGrid, clearGrid } from "../utils/music2";
 
   export let isPlaying = false;
   export let saved: boolean;
   export let copied = false;
-
-  export let bpm: number;
-  export let scale: string;
-  export let dataUrl: string;
 
   const dispatch = createEventDispatcher();
 
@@ -156,7 +152,7 @@
           min={0}
           max={1000}
           type="number"
-          bind:value={bpm}
+          bind:value={$synthState.bpm}
           on:change={debounceReplay}
         />
         <label for="bpm" class="text-white lowercase"> BPM </label>
@@ -164,7 +160,7 @@
 
       <div class="flex mx-4 pb-6">
         <div class="flex">
-          <button class="p-4" on:click={() => dispatch("clear")}>
+          <button class="p-4" on:click={clearGrid}>
             <BinIcon />
           </button>
 
@@ -216,7 +212,7 @@
               transition ease-in-out
               focus:border-blue-600 focus:outline-none"
           aria-label="Select scale"
-          bind:value={scale}
+          bind:value={$synthState.scale}
         >
           <option value="classic" selected>classic</option>
           <option value="pentatonic">pentatonic</option>
