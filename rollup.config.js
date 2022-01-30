@@ -5,8 +5,11 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
+import alias from '@rollup/plugin-alias';
 import css from 'rollup-plugin-css-only';
+import path from "path";
 
+const projectRootDir = path.resolve(__dirname);
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -58,6 +61,14 @@ export default {
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
 
+		alias({
+      entries: [
+				{ find: "$icons", replacement: path.resolve(projectRootDir, 'src/icons') },
+				{ find: "$utils", replacement: path.resolve(projectRootDir, 'src/utils') },
+				{ find: "$components", replacement: path.resolve(projectRootDir, 'src/components') },
+      ]
+    }),
+
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -65,7 +76,7 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
 		}),
 		commonjs(),
 		typescript({
