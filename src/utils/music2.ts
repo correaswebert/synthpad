@@ -112,25 +112,42 @@ export const playCell = async (index: number) => {
 export function playGrid() {
   let synthpad = get(synthState);
   let synthDimens = get(dimens);
+  let activeRowIdx = synthpad.activeRowIdx;
 
   synthpad.playing = true;
   clearInterval(playIntervalId);
 
   playIntervalId = setInterval(() => {
-    synthpad.activeRowIdx = (synthpad.activeRowIdx + 1) % synthDimens.numRows;
-    playRow(synthpad.activeRowIdx);
+    activeRowIdx = (activeRowIdx + 1) % synthDimens.numRows;
+    synthState.set({ ...synthpad, activeRowIdx });
+    playRow(activeRowIdx);
   }, (60 * 1000) / synthpad.bpm);
 }
 
 export function pauseGrid() {
   let synthpad = get(synthState);
   synthpad.playing = false;
+  synthState.set({ ...synthpad, playing: false });
   clearInterval(playIntervalId);
 }
 
 export function stopGrid() {
   let synthpad = get(synthState);
-  synthpad.playing = false;
   clearInterval(playIntervalId);
-  synthpad.activeRowIdx = -1;
+  synthState.set({ ...synthpad, activeRowIdx: -1, playing: false });
+}
+
+export function clearGrid() {
+  let synthpadGrid = get(grid);
+  let synthDimens = get(dimens);
+
+  if (!synthpadGrid.length) return;
+
+  for (let row = 0; row < synthDimens.numRows; row++) {
+    for (let col = 0; col < synthDimens.numCols; col++) {
+      synthpadGrid[row][col] = false;
+    }
+  }
+
+  grid.update(() => synthpadGrid);
 }
