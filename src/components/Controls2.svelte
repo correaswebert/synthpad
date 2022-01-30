@@ -9,12 +9,13 @@
   import UndoIcon from "../icons/UndoIcon.svelte";
   import RedoIcon from "../icons/RedoIcon.svelte";
   import RobotIcon from "../icons/RobotIcon.svelte";
-  import { dimens, synthState } from "../utils/store";
+  import { dimens, synthState, dataUrl, grid } from "../utils/store";
   import { playGrid, pauseGrid, stopGrid, clearGrid } from "../utils/music2";
+  import { encodeUrl } from "../utils/hash2";
 
-  export let isPlaying = false;
-  export let saved: boolean;
-  export let copied = false;
+  let isPlaying = $synthState.playing;
+  let saved: boolean;
+  let copied = false;
 
   const dispatch = createEventDispatcher();
 
@@ -49,7 +50,7 @@
     if (!copied) {
       const origin = window.location.origin;
       const pathname = window.location.pathname;
-      const url = `${origin}${pathname}?dataUrl=${dataUrl}`;
+      const url = `${origin}${pathname}?dataUrl=${$dataUrl}`;
       await navigator.clipboard.writeText(url);
       dispatch("copied");
     }
@@ -68,6 +69,13 @@
   function musigenHelper() {
     dispatch("musigen");
   }
+
+
+  $: $dataUrl = encodeUrl({
+    grid: $grid,
+    scale: $synthState.scale,
+    bpm: $synthState.bpm,
+  });
 </script>
 
 <div
