@@ -1,15 +1,16 @@
 <script lang="ts">
-  import Cell from "./Cell.svelte";
+  import Cell2 from "./Cell2.svelte";
+  import { synthState, dimens } from "../utils/store";
 
-  export let row: boolean[];
-  export let isRowAcive: boolean;
-  export let isGridPlaying: boolean;
+  export let rowIdx: number;
+
+  $: isActive = $synthState.activeRowIdx === rowIdx;
 </script>
 
 <div class="flex">
-  <div class={`${isRowAcive ? "scale-95 -translate-x-1" : ""}`}>
-    {#each row as active, idx}
-      <Cell on:update bind:active cellIdx={idx} {isGridPlaying} />
+  <div class={`${isActive ? "scale-95 -translate-x-1" : ""}`}>
+    {#each Array($dimens.numCols) as _, cellIdx}
+      <Cell2 on:update {cellIdx} {rowIdx} />
     {/each}
   </div>
 </div>

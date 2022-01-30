@@ -1,9 +1,11 @@
 <script lang="ts">
   import Row2 from "./Row2.svelte";
-  import { dimens, grid } from "../utils/store";
+  import { dimens, grid, synthState } from "../utils/store";
+  import { playRow } from "../utils/music2";
 
-  let isGridPlaying: boolean = false;
   let currRow: number = -1;
+  let playIntervalId: NodeJS.Timer;
+  let bpm = 150;
 
   export function clearGrid() {
     if (!$grid.length) return;
@@ -44,7 +46,7 @@
 </script>
 
 <div class="flex flex-col">
-  {#each $grid as row, idx}
-    <Row2 {isGridPlaying} isRowAcive={currRow === idx} bind:row />
+  {#each Array($dimens.numRows) as _, rowIdx}
+    <Row2 {rowIdx} />
   {/each}
 </div>
