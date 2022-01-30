@@ -1,9 +1,10 @@
 import * as Tone from "tone";
-import { grid } from "./store";
+import { grid, synthState, dimens } from "./store";
 import { get } from "svelte/store";
 
 // FIX: type to be determined
 let synth: any;
+let playIntervalId: NodeJS.Timer;
 
 let scales = {
   classic: [
@@ -93,7 +94,7 @@ export const initAudio = async () => {
 export const playRow = async (rowIdx: number) => {
   if (!synth) await initAudio();
 
-  let synthpadGrid = get(grid)
+  let synthpadGrid = get(grid);
   let notesToPlay: string[] = [];
 
   synthpadGrid[rowIdx].forEach((isCellActive, idx) => {
@@ -107,3 +108,29 @@ export const playCell = async (index: number) => {
   if (!synth) await initAudio();
   synth.triggerAttackRelease(selectedScale[index], "16n");
 };
+
+export function playGrid() {
+  let synthpad = get(synthState);
+  let synthDimens = get(dimens);
+
+  synthpad.playing = true;
+  clearInterval(playIntervalId);
+
+  playIntervalId = setInterval(() => {
+    synthpad.activeRowIdx = (synthpad.activeRowIdx + 1) % synthDimens.numRows;
+    playRow(synthpad.activeRowIdx);
+  }, (60 * 1000) / synthpad.bpm);
+}
+
+export function pauseGrid() {
+  let synthpad = get(synthState);
+  synthpad.playing = false;
+  clearInterval(playIntervalId);
+}
+
+export function stopGrid() {
+  let synthpad = get(synthState);
+  synthpad.playing = false;
+  clearInterval(playIntervalId);
+  synthpad.activeRowIdx = -1;
+}

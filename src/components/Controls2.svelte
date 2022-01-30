@@ -10,13 +10,12 @@
   import RedoIcon from "../icons/RedoIcon.svelte";
   import RobotIcon from "../icons/RobotIcon.svelte";
   import { dimens } from "../utils/store";
+  import { playGrid, pauseGrid, stopGrid } from "../utils/music2";
 
   export let isPlaying = false;
   export let saved: boolean;
   export let copied = false;
 
-  export let numRows: number;
-  export let numCols: number;
   export let bpm: number;
   export let scale: string;
   export let dataUrl: string;
@@ -33,13 +32,16 @@
 
   function toggleIsPlaying() {
     isPlaying = !isPlaying;
-    if (isPlaying) dispatch("play");
-    else dispatch("pause");
+    if (isPlaying) {
+      playGrid();
+    } else {
+      pauseGrid();
+    }
   }
 
   function stopPlaying() {
     isPlaying = false;
-    dispatch("stop");
+    stopGrid();
   }
 
   function saveData() {
