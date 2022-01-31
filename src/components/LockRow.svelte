@@ -1,12 +1,13 @@
 <script lang="ts">
   import LockIcon from "../icons/LockIcon.svelte";
   import { dimens } from "../utils/store";
+  import { unit } from "../utils/store";
 </script>
 
 <div class="flex flex-col">
   {#each Array($dimens.numRows) as _, idx}
     <!-- TODO: handle the click -->
-    <button on:click|capture>
+    <button style="width: {$unit}px; height: {$unit}px" on:click|capture>
       <LockIcon />
     </button>
   {/each}
@@ -14,8 +15,7 @@
 
 <style>
   button {
-    @apply w-24 h-24
-    m-1
+    @apply m-1
     flex justify-center items-center
     border border-zinc-900 rounded-lg
     transition

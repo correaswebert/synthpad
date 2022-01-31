@@ -79,8 +79,35 @@ let scales = {
   ],
 };
 
-let selectedScale = scales["classic"];
+let synthpad: {
+  playing: boolean;
+  activeRowIdx: number;
+  bpm: number;
+  scale: string;
+};
+
+let synthpadGrid: boolean[][];
+
+let playing: boolean;
+let activeRowIdx: number;
+let bpm: number;
+let scale: string;
+
+
+let selectedScale = scales[synthpad?.scale ?? "major"];
 const possibleScales = Object.keys(scales);
+
+const unsubSynthState = synthState.subscribe((state) => {
+  synthpad = state;
+  playing = state.playing
+  activeRowIdx = state.activeRowIdx
+  bpm = state.bpm
+  selectedScale = scales[state.scale]
+});
+
+const unsubGrid = grid.subscribe((grid) => {
+  synthpadGrid = grid;
+});
 
 export const selectScale = (scale: string) => {
   if (possibleScales.includes(scale)) selectedScale = scales[scale];
@@ -94,7 +121,6 @@ export const initAudio = async () => {
 export const playRow = async (rowIdx: number) => {
   if (!synth) await initAudio();
 
-  let synthpadGrid = get(grid);
   let notesToPlay: string[] = [];
 
   synthpadGrid[rowIdx].forEach((isCellActive, idx) => {
@@ -110,35 +136,30 @@ export const playCell = async (index: number) => {
 };
 
 export function playGrid() {
-  let synthpad = get(synthState);
   let synthDimens = get(dimens);
-  let activeRowIdx = synthpad.activeRowIdx;
 
-  synthpad.playing = true;
+  playing = true;
   clearInterval(playIntervalId);
 
   playIntervalId = setInterval(() => {
     activeRowIdx = (activeRowIdx + 1) % synthDimens.numRows;
     synthState.set({ ...synthpad, activeRowIdx });
     playRow(activeRowIdx);
-  }, (60 * 1000) / synthpad.bpm);
+  }, (60 * 1000) / bpm);
 }
 
 export function pauseGrid() {
-  let synthpad = get(synthState);
-  synthpad.playing = false;
+  playing = false;
   synthState.set({ ...synthpad, playing: false });
   clearInterval(playIntervalId);
 }
 
 export function stopGrid() {
-  let synthpad = get(synthState);
   clearInterval(playIntervalId);
   synthState.set({ ...synthpad, activeRowIdx: -1, playing: false });
 }
 
 export function clearGrid() {
-  let synthpadGrid = get(grid);
   let synthDimens = get(dimens);
 
   if (!synthpadGrid.length) return;
@@ -150,4 +171,9 @@ export function clearGrid() {
   }
 
   grid.update(() => synthpadGrid);
+}
+
+export function destroySubscriptions() {
+  unsubSynthState();
+  unsubGrid();
 }

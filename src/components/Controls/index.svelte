@@ -6,9 +6,40 @@
   import Share from "./Share.svelte";
   import Assistant from "./Assistant.svelte";
   import Scale from "./Scale.svelte";
+  import {isMobile} from "../../utils/store"
 </script>
 
 <div
+  class="
+    sticky top-0 z-10 
+    w-full
+    bg-zinc-900
+    flex flex-col justify-center items-center
+    border-b border-white"
+>
+  <div class="grid w-3/4 max-w-5xl">
+    <Player />
+    
+    <details>
+      <summary>expand</summary>
+
+      <Dimensions />
+      <Nft />
+
+      <Share />
+      <Assistant />
+
+      <Tempo />
+      <Scale />
+    </details>
+  </div>
+</div>
+
+<style>
+
+</style>
+
+<!-- <div
   class="
     sticky top-0 z-10 
     w-full
@@ -34,4 +65,4 @@
       <Scale />
     </div>
   </div>
-</div>
+</div> -->

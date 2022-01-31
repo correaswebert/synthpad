@@ -1,6 +1,7 @@
 <script lang="ts">
   import { playCell } from "../utils/music";
   import { synthState, grid } from "../utils/store";
+  import {unit} from "../utils/store"
 
   export let rowIdx: number;
   export let cellIdx: number;
@@ -25,6 +26,7 @@
 </script>
 
 <button
+  style="width: {$unit}px; height: {$unit}px"
   class:active
   class:focused
   on:mouseenter={addFocus}
@@ -42,12 +44,14 @@
     box-shadow: 0px 0px 8px 2px rgb(255, 255, 255, 0.5);
   }
 
+  /* @apply w-24 h-24 */
+  /* m-1 */
   button {
-    @apply w-24 h-24
-    m-1
+    @apply
     bg-zinc-900
-    border border-white rounded-lg
+    border border-white rounded
     select-none
     transition ease-in delay-[50ms];
+    margin: 2px
   }
 </style>
