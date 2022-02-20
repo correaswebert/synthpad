@@ -6,10 +6,10 @@
   import Share from "./Share.svelte";
   import Assistant from "./Assistant.svelte";
   import Scale from "./Scale.svelte";
-  import {isMobile} from "../../utils/store"
+  import { isMobile } from "../../utils/store";
 </script>
 
-<div
+<!-- <div
   class="
     sticky top-0 z-10 
     w-full
@@ -19,27 +19,19 @@
 >
   <div class="grid w-3/4 max-w-5xl">
     <Player />
-    
-    <details>
-      <summary>expand</summary>
 
-      <Dimensions />
-      <Nft />
+    <Dimensions />
+    <Nft />
 
-      <Share />
-      <Assistant />
+    <Share />
+    <Assistant />
 
-      <Tempo />
-      <Scale />
-    </details>
+    <Tempo />
+    <Scale />
   </div>
-</div>
+</div> -->
 
-<style>
-
-</style>
-
-<!-- <div
+<div
   class="
     sticky top-0 z-10 
     w-full
@@ -65,4 +57,7 @@
       <Scale />
     </div>
   </div>
-</div> -->
+</div>
+
+<style>
+</style>
