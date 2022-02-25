@@ -16,7 +16,7 @@
 >
   <Controls />
 
-  <div class="grow flex my-2 overflow-y-auto no-scrollbar">
+  <div class="grow flex my-2 overflow-y-scroll no-scrollbar">
     <PlayRow />
     <Grid />
     <LockRow />

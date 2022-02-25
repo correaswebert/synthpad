@@ -4,7 +4,7 @@
   import { unit } from "../utils/store";
 </script>
 
-<div class="flex flex-col">
+<div>
   {#each Array($dimens.numRows) as _, idx}
     <!-- TODO: handle the click -->
     <button style="width: {$unit}px; height: {$unit}px" on:click|capture>

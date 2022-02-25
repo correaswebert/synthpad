@@ -5,7 +5,7 @@
   import {unit} from "../utils/store"
 </script>
 
-<div class="flex flex-col">
+<div>
   {#each Array($dimens.numRows) as _, idx}
     <button
       style="width: {$unit}px; height: {$unit}px"
